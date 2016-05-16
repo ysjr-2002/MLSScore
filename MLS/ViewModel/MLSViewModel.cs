@@ -21,7 +21,7 @@ namespace MLS.ViewModel
     {
         public ObservableCollection<PersonScore> SourceList { get; set; }
         public ObservableCollection<PersonScore> Errors { get; set; }
-        public ObservableCollection<TeamScore> Team { get; set; }
+        public ObservableCollection<TeamScore> SourceTeamScores { get; set; }
 
         private DelegateCommand _importExcel = null;
         private DelegateCommand<ObservableCollection<TeamScore>> _exportExcel = null;
@@ -29,7 +29,8 @@ namespace MLS.ViewModel
         public MLSViewModel()
         {
             SourceList = new ObservableCollection<PersonScore>();
-            Team = new ObservableCollection<TeamScore>();
+            SourceTeamScores = new ObservableCollection<TeamScore>();
+            Teams = new ObservableCollection<TeamScore>();
             Errors = new ObservableCollection<PersonScore>();
             LoadVisibilty = Visibility.Hidden;
 
@@ -68,6 +69,13 @@ namespace MLS.ViewModel
             set { this.SetValue(s => s.TopSelect, value); }
         }
 
+        public ObservableCollection<TeamScore> Teams
+        {
+            get { return this.GetValue(s => s.Teams); }
+            set { this.SetValue(s => s.Teams, value); }
+        }
+
+
         public DelegateCommand ImportExcel
         {
             get
@@ -91,7 +99,7 @@ namespace MLS.ViewModel
                         LoadVisibilty = Visibility.Visible;
                         Task.Run(() =>
                         {
-                            Export.Excel(Team);
+                            Export.Excel(SourceTeamScores);
                             LoadVisibilty = Visibility.Hidden;
                         });
                     }
@@ -228,14 +236,15 @@ namespace MLS.ViewModel
                     data.GroupScore = score;
                     data.Team = d.Team;
 
-                    Application.Current.Dispatcher.Invoke(() => { Team.Add(data); });
+                    Application.Current.Dispatcher.Invoke(() => { SourceTeamScores.Add(data); });
                 }
                 else
                 {
                     Debug.WriteLine("团队成绩不符合规范:" + item.Key + "=" + item.Count());
                 }
             }
-            //statList = statList.OrderBy(s => s.GroupScore).ToList();
+            SourceTeamScores = new ObservableCollection<TeamScore>(SourceTeamScores.OrderBy(s => s.GroupScore).ToList());
+            Top(Int32.MaxValue);
         }
 
         private TimeSpan GetTimeSpan(string str)
@@ -281,6 +290,17 @@ namespace MLS.ViewModel
                 {
                 }
             }
+        }
+
+        public void Top(int take)
+        {
+            var query = SourceTeamScores.Take(take).ToList();
+            Teams = new ObservableCollection<TeamScore>(query);
+        }
+
+        public void Search(string key)
+        {
+
         }
     }
 }

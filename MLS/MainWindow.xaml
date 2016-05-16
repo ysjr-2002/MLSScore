@@ -6,7 +6,9 @@
                       Title=""
                       Width="800"
                       Height="600"
-                      WindowStartupLocation="CenterScreen">
+                      Icon="Images/run.ico"
+                      WindowStartupLocation="CenterScreen"
+                      WindowState="Maximized">
     <Window.Resources>
         <local:RowIndexConvert x:Key="rowIndexConvert" />
         <DataTemplate x:Key="Code">
@@ -67,6 +69,9 @@
             <Label Content="{Binding BScore}" />
         </DataTemplate>
 
+        <DataTemplate x:Key="GroupScore">
+            <Label Background="Red" Content="{Binding GroupScore}" />
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid Margin="5">
@@ -79,13 +84,19 @@
                         Margin="5,0,0,0"
                         Orientation="Horizontal">
                 <Button Command="{Binding ImportExcel}" Content="导入数据文件" />
-                <Label Margin="5,0,0,0" Content="姓名、编号：" />
-                <TextBox Name="tbKey" Width="100" />
-                <Label Margin="5,0,0,0" Content="Top Ten" />
+
+                <Label Margin="10,0,0,0" Content="Top Ten" />
                 <ComboBox Name="cmbTop"
                           Width="150"
                           ItemsSource="{Binding Tops}"
-                          SelectedItem="{Binding TopSelect}" />
+                          SelectedItem="{Binding TopSelect}"
+                          SelectionChanged="cmbTop_SelectionChanged" />
+
+                <Label Margin="20,0,0,0" Content="姓名、编号：" />
+                <TextBox Name="tbKey" Width="100" />
+                <Button Name="btnQueryScore"
+                        Click="btnQueryScore_Click"
+                        Content="查询个人成绩" />
             </StackPanel>
             <StackPanel Grid.Row="1" />
             <GroupBox Grid.Row="2" Header="比赛统计数据">
@@ -136,7 +147,7 @@
                                         HorizontalAlignment="Right">
                                 <Button Command="{Binding ExportTeamScoreCommand}" Content="导出成绩" />
                             </StackPanel>
-                            <ListView Grid.Row="1" ItemsSource="{Binding Team}">
+                            <ListView Grid.Row="1" ItemsSource="{Binding Teams}">
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
@@ -197,6 +208,10 @@
                                             <GridViewColumn Width="80"
                                                             DisplayMemberBinding="{Binding DScore}"
                                                             Header="成绩" />
+                                            <!--  团队成绩  -->
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource GroupScore}"
+                                                            Header="团队成绩" />
                                         </GridView.Columns>
                                     </GridView>
                                 </ListView.View>
