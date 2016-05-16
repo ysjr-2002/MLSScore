@@ -51,3 +51,4 @@ D:\Work\MLSScore\MLS\obj\Debug\MLS.Properties.Resources.resources
 D:\Work\MLSScore\MLS\obj\Debug\MLS.csproj.GenerateResource.Cache
 D:\Work\MLSScore\MLS\obj\Debug\MLS.exe
 D:\Work\MLSScore\MLS\obj\Debug\MLS.pdb
+F:\github\MLSScore\MLS\obj\Debug\MLS.csprojResolveAssemblyReference.cache

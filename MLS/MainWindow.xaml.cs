@@ -21,6 +21,7 @@ namespace MLS
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("i'm ysj");
         }
 
         private void cmbTop_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
