@@ -1,153 +1,258 @@
-﻿<Window x:Class="MLS.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="350" Width="525">
+﻿<Controls:MetroWindow x:Class="MLS.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:local="clr-namespace:MLS.ViewModel"
+                      Title=""
+                      Width="800"
+                      Height="600"
+                      WindowStartupLocation="CenterScreen">
     <Window.Resources>
+        <local:RowIndexConvert x:Key="rowIndexConvert" />
         <DataTemplate x:Key="Code">
-            <Label Content="{Binding Code}"></Label>
+            <Label Content="{Binding Code}" />
         </DataTemplate>
         <DataTemplate x:Key="Name">
-            <Label Content="{Binding Name}"></Label>
+            <Label Content="{Binding Name}" />
         </DataTemplate>
         <DataTemplate x:Key="Team">
-            <Label Content="{Binding Team}"></Label>
+            <Label Content="{Binding Team}" />
         </DataTemplate>
         <DataTemplate x:Key="Start">
-            <Label Content="{Binding Start}" Name="bb">
-                <Label.Triggers>
-                    <!--<Trigger Property="Content" Value="00:00:00">
-                            <Setter Property="Label.Foreground" Value="Red"></Setter>
-                    </Trigger>-->
-                </Label.Triggers>
-            </Label>
-            <!--<DataTemplate.Triggers>
-                <Trigger Property="Content" Value="00:00:00">
-                </Trigger>
-            </DataTemplate.Triggers>-->
+            <Label Name="start" Content="{Binding Start}" />
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Start}" Value="00:00:00">
+                    <Setter TargetName="start" Property="Background" Value="Red" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
         <DataTemplate x:Key="End">
-            <Label Content="{Binding End}"></Label>
+            <Label Content="{Binding End}" />
         </DataTemplate>
         <DataTemplate x:Key="Mid">
-            <Label Content="{Binding Mid}"></Label>
+            <Label Content="{Binding Mid}" />
         </DataTemplate>
         <DataTemplate x:Key="Score">
-            <Label Content="{Binding Score}"></Label>
+            <Label Content="{Binding Score}" />
         </DataTemplate>
 
         <Style TargetType="Label">
-            <Setter Property="FontSize" Value="12"></Setter>
-            <Setter Property="FontWeight" Value="Normal"></Setter>
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
         </Style>
-        <!--A-->
+        <!--  A  -->
         <DataTemplate x:Key="A">
-            <Label Content="{Binding A}"></Label>
+            <Label Content="{Binding A}" />
         </DataTemplate>
         <DataTemplate x:Key="AStart">
-            <Label Content="{Binding AStart}"></Label>
+            <Label Content="{Binding AStart}" />
         </DataTemplate>
         <DataTemplate x:Key="AEnd">
-            <Label Content="{Binding AEnd}"></Label>
+            <Label Content="{Binding AEnd}" />
         </DataTemplate>
         <DataTemplate x:Key="AScore">
-            <Label Content="{Binding AScore}"></Label>
+            <Label Content="{Binding AScore}" />
         </DataTemplate>
-        <!--B-->
+        <!--  B  -->
         <DataTemplate x:Key="B">
-            <Label Content="{Binding B}"></Label>
+            <Label Content="{Binding B}" />
         </DataTemplate>
         <DataTemplate x:Key="BStart">
-            <Label Content="{Binding BStart}"></Label>
+            <Label Content="{Binding BStart}" />
         </DataTemplate>
         <DataTemplate x:Key="BEnd">
-            <Label Content="{Binding BEnd}"></Label>
+            <Label Content="{Binding BEnd}" />
         </DataTemplate>
         <DataTemplate x:Key="BScore">
-            <Label Content="{Binding BScore}"></Label>
+            <Label Content="{Binding BScore}" />
         </DataTemplate>
-    </Window.Resources>
-    <Grid Margin="5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Label Content="姓名、编号："></Label>
-            <TextBox Name="tbKey" Width="100"></TextBox>
 
-            <Label Content="Top Ten" Margin="5,0,0,0"></Label>
-            <ComboBox Name="cmbTop" Width="150"></ComboBox>
-        </StackPanel>
-        <StackPanel Grid.Row="1"></StackPanel>
-        <GroupBox Header="数据" Grid.Row="2">
-            <TabControl>
-                <TabItem Header="原始数据">
-                    <ListView ItemsSource="{Binding SourceList}">
-                        <ListView.View>
-                            <GridView>
-                                <GridView.Columns>
-                                    <GridViewColumn Header="编号" Width="60" CellTemplate="{StaticResource Code}"></GridViewColumn>
-                                    <GridViewColumn Header="名称" Width="60" CellTemplate="{StaticResource Name}"></GridViewColumn>
-                                    <GridViewColumn Header="团队" Width="120" CellTemplate="{StaticResource Team}"></GridViewColumn>
-                                    <GridViewColumn Header="起跑" Width="100" CellTemplate="{StaticResource Start}"></GridViewColumn>
-                                    <GridViewColumn Header="计时点" Width="80" CellTemplate="{StaticResource Mid}"></GridViewColumn>
-                                    <GridViewColumn Header="终点" Width="80" CellTemplate="{StaticResource End}"></GridViewColumn>
-                                    <GridViewColumn Header="成绩" Width="80" CellTemplate="{StaticResource Score}"></GridViewColumn>
-                                </GridView.Columns>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="团队成绩">
-                    <ListView ItemsSource="{Binding Team}">
-                        <ListView.View>
-                            <GridView>
-                                <GridView.Columns>
-                                    <GridViewColumn Header="编号" Width="60" CellTemplate="{StaticResource Code}"></GridViewColumn>
-                                    <GridViewColumn Header="团队" Width="120" CellTemplate="{StaticResource Team}"></GridViewColumn>
-                                    <GridViewColumn Header="A" Width="100" CellTemplate="{StaticResource A}"></GridViewColumn>
-                                    <GridViewColumn Header="起跑" Width="80" CellTemplate="{StaticResource AStart}"></GridViewColumn>
-                                    <GridViewColumn Header="终点" Width="80" CellTemplate="{StaticResource AEnd}"></GridViewColumn>
-                                    <GridViewColumn Header="成绩" Width="80" CellTemplate="{StaticResource AScore}"></GridViewColumn>
-                                    <GridViewColumn Header="B" Width="100" CellTemplate="{StaticResource B}"></GridViewColumn>
-                                    <GridViewColumn Header="起跑" Width="80" CellTemplate="{StaticResource BStart}"></GridViewColumn>
-                                    <GridViewColumn Header="终点" Width="80" CellTemplate="{StaticResource BEnd}"></GridViewColumn>
-                                    <GridViewColumn Header="成绩" Width="80" CellTemplate="{StaticResource BScore}"></GridViewColumn>
-                                </GridView.Columns>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="犯规队员">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Orientation="Horizontal">
-                            <Label Content="犯规人数:"></Label>
-                            <Label Content="{Binding ErrorCount}"></Label>
-                        </StackPanel>
-                        <ListView Grid.Row="1"  ItemsSource="{Binding Errors}">
+    </Window.Resources>
+    <Grid>
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0"
+                        Margin="5,0,0,0"
+                        Orientation="Horizontal">
+                <Button Command="{Binding ImportExcel}" Content="导入数据文件" />
+                <Label Margin="5,0,0,0" Content="姓名、编号：" />
+                <TextBox Name="tbKey" Width="100" />
+                <Label Margin="5,0,0,0" Content="Top Ten" />
+                <ComboBox Name="cmbTop"
+                          Width="150"
+                          ItemsSource="{Binding Tops}"
+                          SelectedItem="{Binding TopSelect}" />
+            </StackPanel>
+            <StackPanel Grid.Row="1" />
+            <GroupBox Grid.Row="2" Header="比赛统计数据">
+                <TabControl SelectedIndex="{Binding TabIndex}">
+                    <TabItem Header="原始数据">
+                        <ListView ItemsSource="{Binding SourceList}">
                             <ListView.View>
                                 <GridView>
                                     <GridView.Columns>
-                                        <GridViewColumn Header="编号" Width="60" CellTemplate="{StaticResource Code}"></GridViewColumn>
-                                        <GridViewColumn Header="名称" Width="60" CellTemplate="{StaticResource Name}"></GridViewColumn>
-                                        <GridViewColumn Header="团队" Width="120" CellTemplate="{StaticResource Team}"></GridViewColumn>
-                                        <GridViewColumn Header="起跑" Width="100" CellTemplate="{StaticResource Start}"></GridViewColumn>
-                                        <GridViewColumn Header="计时点" Width="80" CellTemplate="{StaticResource Mid}"></GridViewColumn>
-                                        <GridViewColumn Header="终点" Width="80" CellTemplate="{StaticResource End}"></GridViewColumn>
-                                        <GridViewColumn Header="成绩" Width="80" CellTemplate="{StaticResource Score}"></GridViewColumn>
+                                        <GridViewColumn Width="40"
+                                                        DisplayMemberBinding="{Binding Converter={StaticResource rowIndexConvert},
+                                                                                       RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                                        Header="#" />
+                                        <GridViewColumn Width="60"
+                                                        CellTemplate="{StaticResource Code}"
+                                                        Header="编号" />
+                                        <GridViewColumn Width="60"
+                                                        CellTemplate="{StaticResource Name}"
+                                                        Header="名称" />
+                                        <GridViewColumn Width="120"
+                                                        CellTemplate="{StaticResource Team}"
+                                                        Header="团队" />
+                                        <GridViewColumn Width="100"
+                                                        CellTemplate="{StaticResource Start}"
+                                                        Header="起跑" />
+                                        <GridViewColumn Width="80"
+                                                        CellTemplate="{StaticResource Mid}"
+                                                        Header="计时点" />
+                                        <GridViewColumn Width="80"
+                                                        CellTemplate="{StaticResource End}"
+                                                        Header="终点" />
+                                        <GridViewColumn Width="80"
+                                                        CellTemplate="{StaticResource Score}"
+                                                        Header="成绩" />
                                     </GridView.Columns>
                                 </GridView>
                             </ListView.View>
                         </ListView>
-                    </Grid>
-                </TabItem>
-            </TabControl>
-        </GroupBox>
+                    </TabItem>
+                    <TabItem Header="团队成绩">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0"
+                                        Margin="0,0,0,5"
+                                        HorizontalAlignment="Right">
+                                <Button Command="{Binding ExportTeamScoreCommand}" Content="导出成绩" />
+                            </StackPanel>
+                            <ListView Grid.Row="1" ItemsSource="{Binding Team}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridView.Columns>
+                                            <GridViewColumn Width="60"
+                                                            CellTemplate="{StaticResource Code}"
+                                                            Header="编号" />
+                                            <GridViewColumn Width="120"
+                                                            CellTemplate="{StaticResource Team}"
+                                                            Header="团队" />
+                                            <GridViewColumn Width="60"
+                                                            CellTemplate="{StaticResource A}"
+                                                            Header="A" />
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource AStart}"
+                                                            Header="起跑" />
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource AEnd}"
+                                                            Header="终点" />
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource AScore}"
+                                                            Header="成绩" />
+                                            <!--  B  -->
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource B}"
+                                                            Header="B" />
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource BStart}"
+                                                            Header="起跑" />
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource BEnd}"
+                                                            Header="终点" />
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource BScore}"
+                                                            Header="成绩" />
+                                            <!--  C  -->
+                                            <GridViewColumn Width="80"
+                                                            DisplayMemberBinding="{Binding C}"
+                                                            Header="B" />
+                                            <GridViewColumn Width="80"
+                                                            DisplayMemberBinding="{Binding CStart}"
+                                                            Header="起跑" />
+                                            <GridViewColumn Width="80"
+                                                            DisplayMemberBinding="{Binding CEnd}"
+                                                            Header="终点" />
+                                            <GridViewColumn Width="80"
+                                                            DisplayMemberBinding="{Binding CScore}"
+                                                            Header="成绩" />
+                                            <!--  D#  -->
+                                            <GridViewColumn Width="80"
+                                                            DisplayMemberBinding="{Binding D}"
+                                                            Header="D" />
+                                            <GridViewColumn Width="80"
+                                                            DisplayMemberBinding="{Binding DStart}"
+                                                            Header="起跑" />
+                                            <GridViewColumn Width="80"
+                                                            DisplayMemberBinding="{Binding DEnd}"
+                                                            Header="终点" />
+                                            <GridViewColumn Width="80"
+                                                            DisplayMemberBinding="{Binding DScore}"
+                                                            Header="成绩" />
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Grid>
+
+                    </TabItem>
+                    <TabItem Header="犯规队员">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                <Label Content="犯规人数:" />
+                                <Label Content="{Binding ErrorCount}" />
+                            </StackPanel>
+                            <ListView Grid.Row="1" ItemsSource="{Binding Errors}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridView.Columns>
+                                            <GridViewColumn Width="40"
+                                                            DisplayMemberBinding="{Binding Converter={StaticResource rowIndexConvert},
+                                                                                           RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                            Header="#" />
+                                            <GridViewColumn Width="60"
+                                                            CellTemplate="{StaticResource Code}"
+                                                            Header="编号" />
+                                            <GridViewColumn Width="60"
+                                                            CellTemplate="{StaticResource Name}"
+                                                            Header="名称" />
+                                            <GridViewColumn Width="120"
+                                                            CellTemplate="{StaticResource Team}"
+                                                            Header="团队" />
+                                            <GridViewColumn Width="100"
+                                                            CellTemplate="{StaticResource Start}"
+                                                            Header="起跑" />
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource Mid}"
+                                                            Header="计时点" />
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource End}"
+                                                            Header="终点" />
+                                            <GridViewColumn Width="80"
+                                                            CellTemplate="{StaticResource Score}"
+                                                            Header="成绩" />
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </GroupBox>
+        </Grid>
+        <Controls:ProgressRing Visibility="{Binding LoadVisibilty}" />
     </Grid>
-</Window>
+</Controls:MetroWindow>
+
