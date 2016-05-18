@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MLS.ViewModel
 {
-    public class PersonScore
+    public class PlayerScore
     {
         public string Code { get; set; }
         public string Name { get; set; }

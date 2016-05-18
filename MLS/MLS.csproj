@@ -70,7 +70,7 @@
     </ApplicationDefinition>
     <Compile Include="ViewModel\Export.cs" />
     <Compile Include="ViewModel\NotifyPropertyBase.cs" />
-    <Compile Include="ViewModel\PersonScore.cs" />
+    <Compile Include="ViewModel\PlayerScore.cs" />
     <Compile Include="ViewModel\PropertyNotifyObject.cs" />
     <Compile Include="ViewModel\RowIndexConvert.cs" />
     <Compile Include="ViewModel\TeamScore.cs" />

@@ -100,9 +100,9 @@
             </StackPanel>
             <StackPanel Grid.Row="1" />
             <GroupBox Grid.Row="2" Header="比赛统计数据">
-                <TabControl SelectedIndex="{Binding TabIndex}">
+                <TabControl SelectedIndex="{Binding TabIndex, Mode=TwoWay}">
                     <TabItem Header="原始数据">
-                        <ListView ItemsSource="{Binding SourceList}">
+                        <ListView ItemsSource="{Binding Players}">
                             <ListView.View>
                                 <GridView>
                                     <GridView.Columns>
@@ -185,7 +185,7 @@
                                             <!--  C  -->
                                             <GridViewColumn Width="80"
                                                             DisplayMemberBinding="{Binding C}"
-                                                            Header="B" />
+                                                            Header="C" />
                                             <GridViewColumn Width="80"
                                                             DisplayMemberBinding="{Binding CStart}"
                                                             Header="起跑" />
@@ -229,7 +229,7 @@
                                 <Label Content="犯规人数:" />
                                 <Label Content="{Binding ErrorCount}" />
                             </StackPanel>
-                            <ListView Grid.Row="1" ItemsSource="{Binding Errors}">
+                            <ListView Grid.Row="1" ItemsSource="{Binding FoulPlayers}">
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>

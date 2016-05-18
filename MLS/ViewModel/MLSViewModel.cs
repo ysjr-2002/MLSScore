@@ -19,19 +19,23 @@ namespace MLS.ViewModel
     /// </summary>
     public class MLSViewModel : PropertyNotifyObject
     {
-        public ObservableCollection<PersonScore> SourceList { get; set; }
-        public ObservableCollection<PersonScore> Errors { get; set; }
-        public ObservableCollection<TeamScore> SourceTeamScores { get; set; }
+        public ObservableCollection<PlayerScore> SourcePlayers { get; set; }
+        public ObservableCollection<PlayerScore> SourceFouls { get; set; }
+        public ObservableCollection<TeamScore> SourceTeams { get; set; }
 
-        private DelegateCommand _importExcel = null;
-        private DelegateCommand<ObservableCollection<TeamScore>> _exportExcel = null;
+        private DelegateCommand _importExcelCommand = null;
+        private DelegateCommand<ObservableCollection<TeamScore>> _exportExcelCommand = null;
 
         public MLSViewModel()
         {
-            SourceList = new ObservableCollection<PersonScore>();
-            SourceTeamScores = new ObservableCollection<TeamScore>();
+            SourcePlayers = new ObservableCollection<PlayerScore>();
+            SourceTeams = new ObservableCollection<TeamScore>();
+            SourceFouls = new ObservableCollection<PlayerScore>();
+
             Teams = new ObservableCollection<TeamScore>();
-            Errors = new ObservableCollection<PersonScore>();
+            Players = new ObservableCollection<PlayerScore>();
+            FoulPlayers = new ObservableCollection<PlayerScore>();
+
             LoadVisibilty = Visibility.Hidden;
 
             Tops = new string[] { "全部", "前3", "前8", "前10", "前20", "前50" };
@@ -69,22 +73,33 @@ namespace MLS.ViewModel
             set { this.SetValue(s => s.TopSelect, value); }
         }
 
+        public ObservableCollection<PlayerScore> Players
+        {
+            get { return this.GetValue(s => s.Players); }
+            set { this.SetValue(s => s.Players, value); }
+        }
+
         public ObservableCollection<TeamScore> Teams
         {
             get { return this.GetValue(s => s.Teams); }
             set { this.SetValue(s => s.Teams, value); }
         }
 
+        public ObservableCollection<PlayerScore> FoulPlayers
+        {
+            get { return this.GetValue(s => s.FoulPlayers); }
+            set { this.SetValue(s => s.FoulPlayers, value); }
+        }
 
         public DelegateCommand ImportExcel
         {
             get
             {
-                if (_importExcel == null)
+                if (_importExcelCommand == null)
                 {
-                    _importExcel = new DelegateCommand(ReadExcel, () => true);
+                    _importExcelCommand = new DelegateCommand(ReadExcel, () => true);
                 }
-                return _importExcel;
+                return _importExcelCommand;
             }
         }
 
@@ -92,20 +107,20 @@ namespace MLS.ViewModel
         {
             get
             {
-                if (_exportExcel == null)
+                if (_exportExcelCommand == null)
                 {
-                    _exportExcel = new DelegateCommand<ObservableCollection<TeamScore>>((s) =>
+                    _exportExcelCommand = new DelegateCommand<ObservableCollection<TeamScore>>((s) =>
                     {
                         LoadVisibilty = Visibility.Visible;
                         Task.Run(() =>
                         {
-                            Export.Excel(SourceTeamScores);
+                            Export.Excel(SourceTeams);
                             LoadVisibilty = Visibility.Hidden;
                         });
                     }
                     );
                 }
-                return _exportExcel;
+                return _exportExcelCommand;
             }
         }
 
@@ -166,8 +181,13 @@ namespace MLS.ViewModel
             try
             {
                 GetPersonScore(table);
-                StatTeamScore(SourceList);
-                ErrorCount = Errors.Count;
+                StatTeamScore(SourcePlayers);
+                ErrorCount = SourceFouls.Count;
+
+
+                Players = new ObservableCollection<PlayerScore>(SourcePlayers);
+                Teams = new ObservableCollection<TeamScore>(SourceTeams);
+                FoulPlayers = new ObservableCollection<PlayerScore>(SourceFouls);
             }
             catch (Exception ex)
             {
@@ -176,7 +196,7 @@ namespace MLS.ViewModel
             }
         }
 
-        private void StatTeamScore(ObservableCollection<PersonScore> list)
+        private void StatTeamScore(ObservableCollection<PlayerScore> list)
         {
             var groupBIB = from n in list
                            group n.Code.Substring(0, 4) by n.Code.Substring(0, 4) into g
@@ -236,15 +256,14 @@ namespace MLS.ViewModel
                     data.GroupScore = score;
                     data.Team = d.Team;
 
-                    Application.Current.Dispatcher.Invoke(() => { SourceTeamScores.Add(data); });
+                    Application.Current.Dispatcher.Invoke(() => { SourceTeams.Add(data); });
                 }
                 else
                 {
                     Debug.WriteLine("团队成绩不符合规范:" + item.Key + "=" + item.Count());
                 }
             }
-            SourceTeamScores = new ObservableCollection<TeamScore>(SourceTeamScores.OrderBy(s => s.GroupScore).ToList());
-            Top(Int32.MaxValue);
+            SourceTeams = new ObservableCollection<TeamScore>(SourceTeams.OrderBy(s => s.GroupScore).ToList());
         }
 
         private TimeSpan GetTimeSpan(string str)
@@ -265,7 +284,7 @@ namespace MLS.ViewModel
             {
                 try
                 {
-                    var data = new PersonScore
+                    var data = new PlayerScore
                     {
                         Code = row["BIB"].ToString().Trim(),
                         Name = row["name1"].ToString().Trim(),
@@ -279,12 +298,12 @@ namespace MLS.ViewModel
                         Debug.WriteLine("没有比赛时间:" + data.Code + " " + data.Name);
                         if (data.Start != TimeSpan.Zero || data.Mid != TimeSpan.Zero || data.End != TimeSpan.Zero)
                         {
-                            Application.Current.Dispatcher.Invoke(() => { Errors.Add(data); });
+                            Application.Current.Dispatcher.Invoke(() => { SourceFouls.Add(data); });
                         }
                         continue;
                     }
                     data.Score = data.End - data.Start;
-                    Application.Current.Dispatcher.Invoke(() => { SourceList.Add(data); });
+                    Application.Current.Dispatcher.Invoke(() => { SourcePlayers.Add(data); });
                 }
                 catch (Exception ex)
                 {
@@ -294,13 +313,27 @@ namespace MLS.ViewModel
 
         public void Top(int take)
         {
-            var query = SourceTeamScores.Take(take).ToList();
+            var query = SourceTeams.Take(take).ToList();
             Teams = new ObservableCollection<TeamScore>(query);
         }
 
         public void Search(string key)
         {
-
+            if (TabIndex == 0)
+            {
+                var query = SourcePlayers.Where(s => s.Name.Contains(key) || s.Code.Contains(key));
+                Players = new ObservableCollection<PlayerScore>(query);
+            }
+            else if (TabIndex == 1)
+            {
+                var query = SourceTeams.Where(s => s.Team.Contains(key) || s.Code.Contains(key));
+                Teams = new ObservableCollection<TeamScore>(query);
+            }
+            else if (TabIndex == 2)
+            {
+                var query = SourceFouls.Where(s => s.Name.Contains(key) || s.Code.Contains(key));
+                FoulPlayers = new ObservableCollection<PlayerScore>(query);
+            }
         }
     }
 }
